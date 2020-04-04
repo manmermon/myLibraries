@@ -40,7 +40,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
 import java.awt.image.WritableRaster;
 
-public class imagenPoligono2D
+public class basicPainter2D
 {	
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
@@ -67,6 +67,19 @@ public class imagenPoligono2D
 		}
 		
 		return copyOfImage;
+	}
+
+	public static BufferedImage convertToBufferedImage( Image image )
+	{
+	    BufferedImage newImage = new BufferedImage(
+	        image.getWidth(null), image.getHeight(null),
+	        BufferedImage.TYPE_INT_ARGB);
+	    
+	    Graphics2D g = newImage.createGraphics();
+	    g.drawImage(image, 0, 0, null);
+	    g.dispose();
+	    
+	    return newImage;
 	}
 	
 	public static Image changeColorPixels( Color oldColor, Color newColor, Image img )
@@ -114,6 +127,36 @@ public class imagenPoligono2D
 		return img;
 	}
 	
+	public static Image createImageFromArray( Integer[][] datImg )
+	{
+		BufferedImage out = null;
+		
+		if( datImg != null && datImg.length > 0 && datImg[ 0 ].length > 0 )
+		{
+			int h = datImg.length ;
+			int w = datImg[ 0 ].length;
+						
+			out = (BufferedImage)createEmptyCanva(  w, h, Color.red );
+			
+			for( int r = 0; r < datImg.length; r++ )
+			{
+				for( int c = 0 ; c < datImg[ 0].length; c++ )
+				{
+					int argb = datImg[ r ][ c ];
+					int b = ( argb & 0x00FF0000 ) >> 16;
+					int g = ( argb & 0x0000FF00 ) >> 8;
+					int red = ( argb & 0x000000FF );
+							
+					Color color = new Color( red, g, b );
+					//basicPainter2D.paintLine( c, r, c, r, 1, color, out );
+					out.setRGB( c, r, color.getRGB() );
+				}
+			}
+		}
+		
+		return out;
+	}
+	
 	public static Image keepColor( Color preserverColor, Image img )
 	{	
 		if( preserverColor != null )
@@ -139,23 +182,23 @@ public class imagenPoligono2D
 		return img;
 	}
 	
-	public static Image crearImagenPunto( int x, int y, int thickness, Color c, boolean fill, Image img )
+	public static Image dot( int x, int y, int thickness, Color c, boolean fill, Image img )
 	{	
 		Image imagen = null;
 		
 		if( fill )
 		{
-			imagen = crearImagenCirculo( x, y, thickness, c, img );
+			imagen = circle( x, y, thickness, c, img );
 		}
 		else
 		{
-			imagen = crearImagenCircunferencia( x, y, thickness, 1, c, img );
+			imagen = circumference( x, y, thickness, 1, c, img );
 		}
 		
 		return imagen;
 	}
 	
-	public static Image crearImagenLinea( int x1, int y1, int x2, int y2, float thickness, Color c, Image img )
+	public static Image line( int x1, int y1, int x2, int y2, float thickness, Color c, Image img )
 	{	
 		BufferedImage imagen = null;
 		Graphics g = null;
@@ -187,7 +230,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenLineaPoligonal( int[] xs, int[] ys, float thickness, Color c, Image img )
+	public static Image polygonLine( int[] xs, int[] ys, float thickness, Color c, Image img )
 	{
 		if( xs == null || ys == null || xs.length != ys.length )
 		{
@@ -231,7 +274,7 @@ public class imagenPoligono2D
 	}
 	
 	
-	public static Image crearImagenPoligonoPerfil( int[] xs, int[] ys, float thickness, Color c, Image img )
+	public static Image outlinePolygon( int[] xs, int[] ys, float thickness, Color c, Image img )
 	{
 		if( xs == null || ys == null || xs.length != ys.length )
 		{
@@ -277,7 +320,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenPoligonoRelleno( int[] xs, int[] ys,Color c, Image img )
+	public static Image fillPolygon( int[] xs, int[] ys,Color c, Image img )
 	{
 		if( xs == null || ys == null || xs.length != ys.length )
 		{
@@ -320,7 +363,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenTriangulo( int lado, float thicknessBorder, Color colorBorde, Color colorRelleno, int orientacion )
+	public static Image triangle( int lado, float thicknessBorder, Color colorBorde, Color colorRelleno, int orientacion )
 	{		
 		int[] xs = { 0,    lado, lado / 2 };
 		int[] ys = { lado, lado, 0 };
@@ -354,7 +397,7 @@ public class imagenPoligono2D
 		
 		if( colorRelleno != null )
 		{
-			img = crearImagenPoligonoRelleno( xs, ys, colorRelleno , img );
+			img = fillPolygon( xs, ys, colorRelleno , img );
 		}
 		
 		Color cBorde = Color.BLACK;
@@ -364,10 +407,10 @@ public class imagenPoligono2D
 			cBorde = colorBorde;
 		}
 		
-		 return crearImagenPoligonoPerfil( xs, ys, thicknessBorder, cBorde, img );		
+		 return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );		
 	}
 	
-	public static Image crearImagenCirculo( int x, int y, int radio, Color c, Image img )
+	public static Image circle( int x, int y, int radio, Color c, Image img )
 	{				
 		BufferedImage imagen = null;
 		
@@ -392,7 +435,7 @@ public class imagenPoligono2D
 		return imagen;		
 	}
 	
-	public static Image crearImagenCircunferencia( int x, int y, int radio, float thicknessBorder, Color c, Image img )
+	public static Image circumference( int x, int y, int radio, float thicknessBorder, Color c, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics g = null;
@@ -426,7 +469,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenOvalo( int x, int y, int width, int height, float thicknessBorder, Color colorBorder, Color colorRelleno, Image img )
+	public static Image oval( int x, int y, int width, int height, float thicknessBorder, Color colorBorder, Color colorRelleno, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics g = null;
@@ -469,7 +512,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenArco( int x, int y, int width, int height, int startAngle, int arcAngle, float thicknessBorder, Color colorBorde, Color ColorRelleno, Image img )
+	public static Image arc( int x, int y, int width, int height, int startAngle, int arcAngle, float thicknessBorder, Color colorBorde, Color ColorRelleno, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics g = null;
@@ -512,7 +555,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenRectangulo( int ancho, int alto, float thicknessBorder, Color colorBorde, Color colorRelleno )
+	public static Image rectangle( int ancho, int alto, float thicknessBorder, Color colorBorde, Color colorRelleno )
 	{		
 		int t = (int)thicknessBorder;
 		int[] xs = { t/2, ancho - t /2, ancho - t/2, t/2 };
@@ -528,7 +571,7 @@ public class imagenPoligono2D
 			int[] xs2 = { 0, ancho, ancho, 0 };
 			int[] ys2 = { 0,  0, alto,  alto };
 			
-			img = crearImagenPoligonoRelleno( xs2, ys2, colorRelleno , img );
+			img = fillPolygon( xs2, ys2, colorRelleno , img );
 		}
 		
 		Color cBorde = Color.BLACK;
@@ -538,10 +581,10 @@ public class imagenPoligono2D
 			cBorde = colorBorde;
 		}
 		
-		 return crearImagenPoligonoPerfil( xs, ys, thicknessBorder, cBorde, img );		
+		 return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );		
 	}
 
-	public static Image crearImagenRectanguloRedondo( int x, int y, int width,
+	public static Image roundRectangle( int x, int y, int width,
 													int height, int arcWidth, int arcHeight, float thickness, Color
 													borderColor, Color fillColor, Image img )
 	{
@@ -578,7 +621,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 
-	public static Image crearImagenRombo( int lado, float thicknessBorder, Color colorBorde, Color colorRelleno )
+	public static Image diamond( int lado, float thicknessBorder, Color colorBorde, Color colorRelleno )
 	{
 		int w = (int) Math.round( ( 1.0  * lado ) / ( Math.sqrt( 2.0 ) ) );
 		
@@ -589,7 +632,7 @@ public class imagenPoligono2D
 		
 		if( colorRelleno != null )
 		{
-			img = crearImagenPoligonoRelleno( xs, ys, colorRelleno , img );
+			img = fillPolygon( xs, ys, colorRelleno , img );
 		}
 		
 		Color cBorde = Color.BLACK;
@@ -599,10 +642,10 @@ public class imagenPoligono2D
 			cBorde = colorBorde;
 		}
 		
-		return crearImagenPoligonoPerfil( xs, ys, thicknessBorder, cBorde, img );
+		return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );
 	}
 
-	public static Image crearImagenTexto( int x, int y, String texto, FontMetrics fm, Color colorBorder, Color colorRelleno, Image img )
+	public static Image text( int x, int y, String texto, FontMetrics fm, Color colorBorder, Color colorRelleno, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -648,7 +691,7 @@ public class imagenPoligono2D
 		return imagen;
 	}	
 	
-	public static Image crearImagenTexto( String texto, FontMetrics fm, Color colorBorder, Color colorRelleno, Image img )
+	public static Image text( String texto, FontMetrics fm, Color colorBorder, Color colorRelleno, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -679,7 +722,7 @@ public class imagenPoligono2D
 			int x = ( w - strW ) / 2;
 			int y = ( h - strH ) / 2;
 			
-			crearImagenTexto( x, y, texto, fm, colorBorder, colorRelleno, imagen );
+			text( x, y, texto, fm, colorBorder, colorRelleno, imagen );
 		}
 		
 		return imagen;
@@ -752,7 +795,7 @@ public class imagenPoligono2D
 		return fm;
 	}
 	
-	public static Image crearImagenPerfilTexto( int x, int y, String texto, FontMetrics fm, Color color, Image img )
+	public static Image outlineText( int x, int y, String texto, FontMetrics fm, Color color, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -786,7 +829,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenPerfilTexto( String texto, FontMetrics fm, Color color, Image img )
+	public static Image outlineText( String texto, FontMetrics fm, Color color, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -817,13 +860,13 @@ public class imagenPoligono2D
 			int x = ( w - strW ) / 2;
 			int y = ( h - strH ) / 2;
 			
-			crearImagenPerfilTexto( x, y, texto, fm, color, imagen );
+			outlineText( x, y, texto, fm, color, imagen );
 		}
 		
 		return imagen;
 	}	
 	
-	public static Image crearImagenPerfilImage( int x, int y, Image img, Color colorFigure, Color colorPerfil, Color fillColor, float thickness )
+	public static Image outlineImage( int x, int y, Image img, Color colorFigure, Color colorPerfil, Color fillColor, float thickness )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -847,7 +890,7 @@ public class imagenPoligono2D
 			
 			fig.transform( transf );
 						
-			imagen = (BufferedImage)crearLienzoVacio( img.getWidth( null ), img.getHeight( null ), null );
+			imagen = (BufferedImage)createEmptyCanva( img.getWidth( null ), img.getHeight( null ), null );
 			g = (Graphics2D)imagen.getGraphics();						
 			
 			((Graphics2D)g).setRenderingHint( RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON );						
@@ -868,7 +911,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenDibujarPerfilFigura( int x, int y, Shape fig,  Color colorPerfil, float thickness, Image img )
+	public static Image paintOutlineFigure( int x, int y, Shape fig,  Color colorPerfil, float thickness, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -900,7 +943,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenDibujarPerfilFigura( int x, int y, GeneralPath fig,  Color colorPerfil, float thickness, Image img )
+	public static Image paintOutlineFigure( int x, int y, GeneralPath fig,  Color colorPerfil, float thickness, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -930,7 +973,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenDibujarFigura( int x, int y, Shape fig, Color color, Image img )
+	public static Image paintFigure( int x, int y, Shape fig, Color color, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -956,7 +999,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearImagenDibujarFigura( int x, int y, GeneralPath fig, Color color, Image img )
+	public static Image paintFigure( int x, int y, GeneralPath fig, Color color, Image img )
 	{
 		BufferedImage imagen = null;
 		Graphics2D g = null;
@@ -982,7 +1025,7 @@ public class imagenPoligono2D
 		return imagen;
 	}
 	
-	public static Image crearLienzoVacio( int width, int height, Color c )
+	public static Image createEmptyCanva( int width, int height, Color c )
 	{
 		BufferedImage imagen = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
 		//imagen.getRaster().getDataBuffer().s
@@ -997,7 +1040,7 @@ public class imagenPoligono2D
 		return imagen;
 	}	
 
-	public static Image componerImagen( Image baseImg, int x, int y, Image pasteImg )
+	public static Image composeImage( Image baseImg, int x, int y, Image pasteImg )
 	{		
 		if( baseImg != null && pasteImg != null )
 		{
