@@ -1,4 +1,4 @@
-package GUI;
+package image.icon;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -989,38 +989,6 @@ public class GeneralAppIcon
 		basicPainter2D.outlinePolygon(xs, ys, 2.0F, borderColor, base);
 
 		return new ImageIcon(base);
-	}
-	
-	public static Image Quaver( int width, int height, Color fillColor, Color bgColor)
-	{
-		Image base = basicPainter2D.createEmptyCanva( width, height, bgColor );
-		
-		int s = Math.min( width, height );		
-		int r = s / 3;
-		int thick = r / 4;
-		
-		if( thick < 1 )
-		{
-			thick = 1;
-		}
-		
-		Image circ = basicPainter2D.circle( 0, 0, r, fillColor, null );
-		Image vert = basicPainter2D.rectangle( thick, height - circ.getHeight( null ) /2, 1, Color.BLACK, Color.BLACK );
-		Image hor = basicPainter2D.rectangle( width - circ.getWidth( null ), 2 * thick, 1, Color.BLACK, Color.BLACK );
-		
-		basicPainter2D.composeImage( base, 0, base.getHeight( null ) - circ.getHeight( null ), circ );
-		basicPainter2D.composeImage( base, base.getWidth( null ) - circ.getWidth( null )
-												, base.getHeight( null ) - circ.getHeight( null ), circ );
-		
-		basicPainter2D.composeImage( base, circ.getWidth( null ) - vert.getWidth( null ), 0, vert );
-		basicPainter2D.composeImage( base, base.getWidth( null ) - vert.getWidth( null ), 0, vert );
-		
-		basicPainter2D.composeImage( base
-										,  circ.getWidth( null ) - vert.getWidth( null )
-										, 0
-										, hor );
-		
-		return base;
 	}
 	
 	public static ImageIcon Sound( int width, int height, Color fillColor, Color bgColor)
