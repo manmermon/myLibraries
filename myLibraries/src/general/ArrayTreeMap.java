@@ -1,17 +1,13 @@
 package general;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
-public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements Cloneable 
+public class ArrayTreeMap< X, Y > extends ArrayMap< X, Y > 
 {
-	private TreeMap< X, List< Y > > tree;
-	
 	/**
 	 * Constructs a new, empty tree map, using the natural ordering of its keys. 
 	 * All keys inserted into the map must implement the Comparable interface. 
@@ -24,7 +20,7 @@ public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements
 	 */
 	public ArrayTreeMap() 
 	{
-		this.tree = new TreeMap< X, List< Y > >();
+		super.map = new TreeMap< X, List< Y > >();
 	}
 	
 	/**
@@ -37,29 +33,7 @@ public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements
 	 */
 	public ArrayTreeMap( Comparator< ? super X > com )
 	{
-		this.tree = new TreeMap< X, List< Y > >( com );		
-	}
-	
-	/**
-	 * Copies all of the mappings from the specified ArrayTreeMap to this ArrayTreeMap.
-	 * @param arrayTree - ArrayTreeMap to be stored in this map
-	 * @throws ClassCastException - if the specified key cannot be compared with the keys currently in the map
-	 * @throws NullPointerException - if the specified key is null and this map uses natural ordering, 
-	 * 								or its comparator does not permit null keys
-	 */
-	public void putAll( ArrayTreeMap< X, Y > arrayTree )
-	{
-		for( X key : arrayTree.keySet() )
-		{
-			List< Y > vals = arrayTree.get( key );
-			if( vals != null )
-			{
-				for( Y val : vals )
-				{
-					this.put( key, val );
-				}
-			}
-		}
+		super.map = new TreeMap< X, List< Y > >( com );		
 	}
 	
 	/**
@@ -68,29 +42,9 @@ public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements
 	 */
 	public Comparator< ? super X > comparator()
 	{
-		return this.tree.comparator();
+		return ((TreeMap< X, List< Y > >)super.map).comparator();
 	}
-	
-	/**
-	 * Removes the first instance of the value for this key from this TreeMap if present.
-	 * @param key - key for which mapping should be removed	  			
-	 * @param val - value for which mapping should be removed 
-	 * @return Returns true if this map contains more instance of the value for for the specified key.
-	 * @throws ClassCastException - if the specified key cannot be compared with the keys currently in the map
-	 * @throws NullPointerException - if the specified key is null and this map uses natural ordering, or its comparator does not permit null keys
-	 */
-	public boolean removeValue( X key, Y val )
-	{
-		List< Y > VALS = this.tree.get( key );
-		
-		if( VALS != null )
-		{
-			VALS.remove( val );
-		}
-		
-		return VALS.contains( val );
-	}
-		
+			
 	/*
 	 * (non-Javadoc)
 	 * @see java.util.AbstractMap#clone()
@@ -98,12 +52,12 @@ public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements
 	@Override
 	protected Object clone() throws CloneNotSupportedException 
 	{
-		TreeMap< X, List< Y > > clon = new TreeMap< X, List< Y > >( this.tree.comparator() );
+		TreeMap< X, List< Y > > clon = new TreeMap< X, List< Y > >( this.comparator() );
 		
-		for( X key : this.tree.keySet() )
+		for( X key : super.map.keySet() )
 		{
 			List< Y > copy = new ArrayList< Y >();
-			List< Y > org = this.tree.get( key );
+			List< Y > org = super.map.get( key );
 			if( org != null )
 			{
 				Collections.copy( copy, org );
@@ -112,152 +66,5 @@ public class ArrayTreeMap< X, Y > extends AbstractMap< X, List< Y > > implements
 		}
 		
 		return clon;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#put(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public List< Y > put( X key, List< Y > values ) 
-	{
-		List< Y > VALS = this.createValuesList( key );
-		
-		VALS.addAll( values );
-		
-		return VALS;
-	}
-
-	/**
-	 * Associates the specified value with the specified key in this map. 
-	 * If the map previously contained a mapping for the key, 
-	 * the old value is replaced.
-	 * @param key - key with which the specified value is to be associated
-	 * @param value - value to be associated with the specified key
-	 * @return  the previous value associated with key, or null if there 
-	 * 			was no mapping for key. (A null return can also indicate 
-	 * 			that the map previously associated null with key).
-	 * @throws ClassCastException - if the specified key cannot be compared 
-	 * 									with the keys currently in the map
-     * @throws NullPointerException - if the specified key is null and this 
-     *									map uses natural ordering, or its 
-     *									comparator does not permit null keys
-	 */
-	public List< Y > put( X key, Y value )
-	{
-		List< Y > VALS = this.createValuesList( key );
-		
-		VALS.add( value );		
-		
-		return VALS;
-	}
-	
-	/**
-	 *  Create a value list for the key.
-	 * @param key  - key with which the specified value is to be associated
-	 * @return List of values for the key.
-	 */
-	private List< Y > createValuesList( X key )
-	{
-		List< Y > VALS = this.tree.get( key );
-		
-		if( VALS == null )
-		{
-			VALS = new ArrayList< Y >();
-			this.tree.put( key, VALS );
-		}
-		
-		return VALS;
-	}
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see java.util.AbstractMap#remove(java.lang.Object)
-	 */
-	@Override
-	public List< Y > remove( Object key ) 
-	{
-		return this.tree.remove( key );
-	}
-
-	/**
-	 * Clear the list of specified values associate with the specified key in this map.
-	 * 
-	 * @param key - key with which the specified value is to be associated
-	 * @throws ClassCastException - if the specified key cannot be compared 
-	 * 									with the keys currently in the map
-     * @throws NullPointerException - if the specified key is null and this 
-     *									map uses natural ordering, or its 
-     *									comparator does not permit null keys
-	 */
-	public void emptyArray( X key )
-	{
-		List< Y > values = this.tree.get( key );
-		if( values != null )
-		{
-			values.clear();
-		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#size()
-	 */
-	@Override
-	public int size() 
-	{
-		return this.tree.size();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#containsKey(java.lang.Object)
-	 */
-	@Override
-	public boolean containsKey( Object key ) 
-	{
-		return this.tree.containsKey( key );
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#containsValue(java.lang.Object)
-	 */
-	@Override
-	public boolean containsValue( Object val ) 
-	{
-		boolean cont = false;	
-		
-		for( List< Y > values : this.tree.values() )
-		{
-			cont = values.contains( val );
-			
-			if( cont )
-			{
-				break;
-			}
-		}
-		
-		return cont;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#get(java.lang.Object)
-	 */
-	@Override
-	public List<Y> get( Object key ) 
-	{
-		return this.tree.get( key );
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractMap#entrySet()
-	 */
-	@Override
-	public Set< Entry< X, List< Y > > > entrySet() 
-	{
-		return this.tree.entrySet();
 	}
 }

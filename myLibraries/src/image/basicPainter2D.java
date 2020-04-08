@@ -1072,7 +1072,7 @@ public class basicPainter2D
 		}
 	}
 	
-	private static Shape generateShapeFromText( int x, int y, int width, int height, Font font, String string) 
+	public static Shape generateShapeFromText( int x, int y, int width, int height, Font font, String string) 
 	{		
 	    BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2 = img.createGraphics();
