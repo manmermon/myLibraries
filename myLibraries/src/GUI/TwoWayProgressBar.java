@@ -76,7 +76,8 @@ public class TwoWayProgressBar extends JComponent
 		super.setBackground( Color.LIGHT_GRAY );
 		super.setForeground( Color.BLACK );
 				
-		super.setPreferredSize( new Dimension( 100 * 2, 200 ) );
+		super.setPreferredSize( new Dimension( 100, 20 ) );
+		super.setSize( super.getPreferredSize() );
 		
 		this.addInteractions();
 	}
@@ -199,7 +200,7 @@ public class TwoWayProgressBar extends JComponent
 			d = super.getSize();
 			d2 = new Dimension( d.height, d.width );
 			
-			super.setSize( d2 );
+			//super.setSize( d2 );
 		}
 		
 		this.repaint();
@@ -558,7 +559,7 @@ public class TwoWayProgressBar extends JComponent
 		Color c = super.getForeground();		
 		if( !isEnabled() )
 		{
-			c = Color.gray;
+			c = Color.GRAY;
 		}
 		
 		if( c == null )
