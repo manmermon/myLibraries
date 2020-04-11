@@ -24,6 +24,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -78,7 +79,7 @@ public class LevelIndicator extends JComponent
 		{
 			this.levels[ i ] = n + ( this.max - this.min ) / this.numLevels;
 		}
-		//this.ins = new Insets( 20, 0, 20, 0);
+		super.setPreferredSize( new Dimension( 100, 20 ) );
 				
 		this.addInteractions();
 	}
@@ -92,7 +93,7 @@ public class LevelIndicator extends JComponent
 			throw new IllegalArgumentException( "Minimum value = 2.");
 		}
 		
-		//this.ins = new Insets( 20, 0, 20, 0);
+		super.setPreferredSize( new Dimension( 100, 20 ) );
 		
 		this.numLevels = levels;
 		this.levelsColors = new Color[ levels ];
@@ -121,6 +122,8 @@ public class LevelIndicator extends JComponent
 			throw new IllegalArgumentException( "Input null/empty.");
 		}
 			
+		super.setPreferredSize( new Dimension( 100, 20 ) );
+		
 		this.numLevels = levels.length;
 		System.arraycopy( levels, 0, this.levels, 0, levels.length );
 		this.levelsColors = new Color[ this.numLevels + 1];	
@@ -490,8 +493,8 @@ public class LevelIndicator extends JComponent
 		}		
 		g.setColor( c );		
 		//g.drawRect( this.inset.left, this.inset.top, getWidth() - this.inset.left - this.inset.right, getHeight() - this.inset.top - this.inset.bottom );
-		int w = getWidth() - ( this.inset.left + this.inset.right)/2;
-		int h = getHeight() - ( this.inset.top + this.inset.bottom ) /2 ;
+		int w = getWidth() - ( this.inset.left + this.inset.right);
+		int h = getHeight() - ( this.inset.top + this.inset.bottom );
 		
 		if( orientation == HORIZONTAL )
 		{
@@ -502,7 +505,7 @@ public class LevelIndicator extends JComponent
 			h -= 1;
 		}
 		
-		g.drawRect( 0, 0, w, h);
+		g.drawRect( this.inset.left, this.inset.top, w, h);
 		
 		this.drawStick( g );
 		
@@ -622,7 +625,7 @@ public class LevelIndicator extends JComponent
 			c = Color.gray;
 		}
 		g.setColor( c );
-		g.drawRect( coord.x, coord.y, w, h);
+		g.drawRect( coord.x, coord.y, w - 1, h - 1);
 
 	}
 	
@@ -667,7 +670,6 @@ public class LevelIndicator extends JComponent
 			c = Color.gray;
 		}
 		
-		//g.setFont( new Font( Font.DIALOG, Font.BOLD, 12));
 		g.setFont( super.getFont() );
 		FontMetrics fm = g.getFontMetrics( g.getFont() );
 				
@@ -679,39 +681,7 @@ public class LevelIndicator extends JComponent
 		
 		int xs = ( getWidth() - fm.stringWidth( this.text ) ) / 2;
 		int ys = ( getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-		/*
-		if( xs < 0 )
-		{
-			xs = 0;
-		}
-		
-		if( ys < 0 )
-		{
-			ys = 0;
-		}
-		
-		g.drawString( this.text , xs , ys);
-		
-		xs = xs + 2;
-		
-		g.drawString( this.text , xs , ys);
-		
-		ys = ys + 2;
-		g.drawString( this.text , xs , ys);			
-		
-		xs = xs - 2;
-		g.drawString( this.text , xs , ys);
-		
-		xs = xs + 1;
-		ys = ys - 1;
-		
-		c = Color.white;
-		if( !isEnabled() )
-		{
-			c = Color.lightGray;
-		}
-		*/
-		
+	
 		g.setColor( c );						
 		g.drawString( this.text , xs , ys);
 	}
