@@ -141,7 +141,7 @@ public class LevelProgressIndicator extends JComponent
 		this.repaint();
 	}
 	
-	public void setColorLevels( Color[] colors)
+	public void setLevelColors( Color[] colors)
 	{
 	
 		if( colors != null && colors.length > 0 )
