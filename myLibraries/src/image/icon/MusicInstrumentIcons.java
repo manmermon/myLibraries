@@ -74,8 +74,8 @@ public class MusicInstrumentIcons
 		}
 		
 		Image circ = basicPainter2D.circle( 0, 0, r, fillColor, null );
-		Image vert = basicPainter2D.rectangle( thick, height - circ.getHeight( null ) /2, 1, Color.BLACK, Color.BLACK );
-		Image hor = basicPainter2D.rectangle( width - circ.getWidth( null ), 2 * thick, 1, Color.BLACK, Color.BLACK );
+		Image vert = basicPainter2D.rectangle( thick, height - circ.getHeight( null ) /2, 1, fillColor, fillColor );
+		Image hor = basicPainter2D.rectangle( width - circ.getWidth( null ), 2 * thick, 1, fillColor, fillColor );
 		
 		basicPainter2D.composeImage( base, 0, base.getHeight( null ) - circ.getHeight( null ), circ );
 		basicPainter2D.composeImage( base, base.getWidth( null ) - circ.getWidth( null )
