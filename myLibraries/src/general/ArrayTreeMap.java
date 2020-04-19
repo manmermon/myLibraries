@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class ArrayTreeMap< X, Y > extends ArrayMap< X, Y > 
@@ -66,5 +67,35 @@ public class ArrayTreeMap< X, Y > extends ArrayMap< X, Y >
 		}
 		
 		return clon;
+	}
+	
+	public X getFirstKey()
+	{
+		X ret = null;
+		
+		try
+		{
+			ret = ((TreeMap< X, List< Y > >)super.map).firstKey();
+		}
+		catch ( NoSuchElementException ex) 
+		{
+		}
+		
+		return ret;
+	}
+	
+	public X getLastKey()
+	{
+		X ret = null;
+		
+		try
+		{
+			ret = ((TreeMap< X, List< Y > >)super.map).lastKey();
+		}
+		catch ( NoSuchElementException ex) 
+		{
+		}
+		
+		return ret;
 	}
 }

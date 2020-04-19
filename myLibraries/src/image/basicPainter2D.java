@@ -36,9 +36,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
-import java.awt.image.WritableRaster;
+import java.util.Arrays;
 
 public class basicPainter2D
 {	
@@ -47,28 +46,33 @@ public class basicPainter2D
 	public static final int EAST = 2;
 	public static final int WEST = 3;
 	
-	public static Image copyImage( Image originalImage )
+	public static BufferedImage copyImage( Image originalImage )
 	{
 		BufferedImage copyOfImage = null;
 		if( originalImage != null )
 		{
-			//int widthOfImage = originalImage.getWidth( null );
-			//int heightOfImage = originalImage.getHeight( null );
+			copyOfImage = (BufferedImage)createEmptyCanva( originalImage.getWidth( null )
+											, originalImage.getHeight( null )
+											, null );
 			
+			Graphics2D g = copyOfImage.createGraphics();
+			g.drawImage( originalImage, 0, 0, null);
+			g.dispose();
+			
+			/*
 			BufferedImage aux = (BufferedImage)originalImage;
 			ColorModel cm = aux.getColorModel();
 			boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 			WritableRaster raster = aux.copyData( null );
 									
 			copyOfImage = new BufferedImage( cm , raster, isAlphaPremultiplied, null );
-			//copyOfImage = new BufferedImage( widthOfImage , heightOfImage, BufferedImage.TYPE_INT_RGB);
-			//Graphics g = copyOfImage.createGraphics();
-			//g.drawImage( originalImage, 0, 0, null);
+			//*/
 		}
 		
 		return copyOfImage;
 	}
 
+	/*
 	public static BufferedImage convertToBufferedImage( Image image )
 	{
 	    BufferedImage newImage = new BufferedImage(
@@ -81,6 +85,7 @@ public class basicPainter2D
 	    
 	    return newImage;
 	}
+	//*/
 	
 	public static Image changeColorPixels( Color oldColor, Color newColor, Image img )
 	{	
@@ -105,7 +110,7 @@ public class basicPainter2D
 				g = ( newColor.getGreen() << 8 ) & 0x0000FF00;
 				b = ( newColor.getBlue() ) & 0x000000FF;
 				
-				new_argb = a | r | g | b;;
+				new_argb = a | r | g | b;
 			}
 			
 			a = ( oldColor.getAlpha() << 24 ) & 0xFF000000;
@@ -121,6 +126,78 @@ public class basicPainter2D
 				if( px == old_argb )
 				{
 					imagePixelData[ i ] = new_argb;
+				}
+			}			
+		}
+		return img;
+	}
+	
+	public static Image changeColorPixels( Color oldColor, Color newColor, float tolerance, Image img )
+	{	
+		if( oldColor != null && img != null )
+		{ 
+			if( tolerance < 0 ) 
+			{
+				tolerance = 0;
+			}
+			else if( tolerance > 1 )
+			{
+				tolerance = 1;
+			}
+			
+			BufferedImage aux = (BufferedImage)img;
+
+			float[] hsb = Color.RGBtoHSB( oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue(), null );
+			
+			float[] hsb1 = Arrays.copyOf( hsb, hsb.length );
+			float[] hsb2 = Arrays.copyOf( hsb, hsb.length );
+			for( int i = 0; i < hsb.length; i++ )
+			{
+				hsb1[ i ] -= tolerance;
+				hsb2[ i ] += tolerance;
+			}
+			
+			
+			DataBufferInt rasterDB = (DataBufferInt)aux.getRaster().getDataBuffer();
+			int[] imagePixelData = rasterDB.getData();
+		
+			int a = newColor.getAlpha();
+			int r = newColor.getRed();
+			int g = newColor.getGreen();
+			int b = newColor.getBlue();
+			
+			for( int i = 0; i < imagePixelData.length; i++ )
+			{	
+				int px = imagePixelData[ i ];
+				
+				Color pxColor = new Color( px );
+				float[] pxHSB = Color.RGBtoHSB( pxColor.getRed(), pxColor.getGreen(), pxColor.getBlue(), null );
+								
+				Color c = null;
+				if( hsb[ 1 ] != 0 )
+				{
+					if( pxHSB[ 0 ] >= hsb1[ 0 ]
+							&& pxHSB[ 0 ] <= hsb2[ 0 ] 
+							&& pxHSB[ 1 ] >= hsb1[ 1 ] 
+							&& pxHSB[ 1 ] <= hsb2[ 1 ] 
+							&& pxHSB[ 2 ] >= hsb1[ 2 ] 
+							&& pxHSB[ 2 ] <= hsb2[ 2 ]  
+							)
+						
+					{
+						c = new Color( r, g, b, pxColor.getAlpha() );
+						imagePixelData[ i ] = c.getRGB();
+					}
+				}
+				else if( pxHSB[ 2 ] >= hsb1[ 2 ] 
+						&& pxHSB[ 2 ] <= hsb2[ 2 ] )
+				{
+					c = new Color( r, g, b, pxColor.getAlpha() );
+				}
+				
+				if( c != null )
+				{				
+					imagePixelData[ i ] = c.getRGB();
 				}
 			}			
 		}
@@ -1090,4 +1167,39 @@ public class basicPainter2D
 	      g2.dispose();
 	    }
 	}
+	
+	public static BufferedImage rotate(BufferedImage img, double degree) 
+	{
+		BufferedImage rotated = null;
+		
+		if( img != null )
+		{
+	        double rads = Math.toRadians( degree );
+	        double sin = Math.abs(Math.sin( rads ) );
+	        double cos = Math.abs(Math.cos( rads ) );
+	        
+	        int w = img.getWidth();
+	        int h = img.getHeight();
+	        
+	        int newWidth = (int) Math.floor(w * cos + h * sin);
+	        int newHeight = (int) Math.floor(h * cos + w * sin);
+	
+	        rotated = (BufferedImage)createEmptyCanva( newWidth, newHeight , null );
+	        
+	        Graphics2D g2d = rotated.createGraphics();
+	        AffineTransform at = new AffineTransform();
+	        at.translate((newWidth - w) / 2, (newHeight - h) / 2);
+	
+	        int x = w / 2;
+	        int y = h / 2;
+	
+	        at.rotate(rads, x, y);
+	        g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON );
+	        g2d.setTransform(at);
+	        g2d.drawImage( img, 0, 0, null );
+	        g2d.dispose();
+		}
+
+        return rotated;
+    }
 }
