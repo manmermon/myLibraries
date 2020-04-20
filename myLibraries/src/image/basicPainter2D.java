@@ -37,7 +37,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
+import java.awt.image.WritableRaster;
 import java.util.Arrays;
 
 public class basicPainter2D
@@ -52,13 +54,15 @@ public class basicPainter2D
 		BufferedImage copyOfImage = null;
 		if( originalImage != null )
 		{
+			//*
 			copyOfImage = (BufferedImage)createEmptyCanva( originalImage.getWidth( null )
-											, originalImage.getHeight( null )
-											, null );
+															, originalImage.getHeight( null )
+															, null );
 			
 			Graphics2D g = copyOfImage.createGraphics();
 			g.drawImage( originalImage, 0, 0, null);
 			g.dispose();
+			//*/
 			
 			/*
 			BufferedImage aux = (BufferedImage)originalImage;
