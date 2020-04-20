@@ -27,6 +27,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -232,6 +233,46 @@ public class basicPainter2D
 		}
 		
 		return out;
+	}
+	
+	public static Image concatImages( Image img1, Image img2, boolean horizontal )
+	{
+		Image img = null;
+		
+		if( img1 == null )
+		{
+			img = copyImage( img2 );
+		}
+		else if( img2 == null )
+		{
+			img = copyImage( img1 );
+		}
+		else
+		{
+			int w = img1.getWidth( null );
+			int h = img1.getHeight( null );
+			Point copyLoc = new  Point( w, 0 );
+			
+			if( horizontal )
+			{
+				w += img2.getWidth( null );
+			}
+			else
+			{
+				copyLoc.x = 0;
+				copyLoc.y = h;
+						
+				h += img2.getHeight( null );				
+			}
+			
+			img = createEmptyCanva( w, h, null );
+			
+			composeImage( img, 0, 0, img1 );
+			composeImage( img, copyLoc.x, copyLoc.y, img2 );
+					
+		}
+		
+		return img;
 	}
 	
 	public static Image keepColor( Color preserverColor, Image img )
