@@ -54,24 +54,25 @@ public class basicPainter2D
 		BufferedImage copyOfImage = null;
 		if( originalImage != null )
 		{
-			//*
-			copyOfImage = (BufferedImage)createEmptyCanva( originalImage.getWidth( null )
-															, originalImage.getHeight( null )
-															, null );
-			
-			Graphics2D g = copyOfImage.createGraphics();
-			g.drawImage( originalImage, 0, 0, null);
-			g.dispose();
-			//*/
-			
-			/*
-			BufferedImage aux = (BufferedImage)originalImage;
-			ColorModel cm = aux.getColorModel();
-			boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-			WritableRaster raster = aux.copyData( null );
-									
-			copyOfImage = new BufferedImage( cm , raster, isAlphaPremultiplied, null );
-			//*/
+			if( !( originalImage instanceof BufferedImage ) )
+			{
+				copyOfImage = (BufferedImage)createEmptyCanva( originalImage.getWidth( null )
+																, originalImage.getHeight( null )
+																, null );
+				
+				Graphics2D g = copyOfImage.createGraphics();
+				g.drawImage( originalImage, 0, 0, null);
+				g.dispose();
+			}
+			else
+			{
+				BufferedImage aux = (BufferedImage)originalImage;
+				ColorModel cm = aux.getColorModel();
+				boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+				WritableRaster raster = aux.copyData( null );
+										
+				copyOfImage = new BufferedImage( cm , raster, isAlphaPremultiplied, null );
+			}
 		}
 		
 		return copyOfImage;
