@@ -16,7 +16,6 @@ public class CollectionEvent extends EventObject
 	 */
 	private static final long serialVersionUID = -3800737571898413342L;
 	
-	public static final int CLEAR_ELEMENT = -1;
 	public static final int INSERT_ELEMENT = 0;	
 	public static final int REMOVE_ELEMENT = 1;	
 

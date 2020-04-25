@@ -79,12 +79,6 @@ public class ClosableTabbedPanel extends JTabbedPane
 		super.removeTabAt( index );
 		
 		this.fireCollectionListener( CollectionEvent.REMOVE_ELEMENT, index, c );
-		
-		int tc = super.getTabCount();
-		if( tc == 0 )
-		{
-			this.fireCollectionListener( CollectionEvent.CLEAR_ELEMENT, -1, null );
-		}
 	}
 	
 	private void fireCollectionListener( int type, int index, Object element )
