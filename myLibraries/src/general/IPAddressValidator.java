@@ -1,4 +1,4 @@
-package GUI;
+package general;
 
 import java.util.regex.Pattern;
  

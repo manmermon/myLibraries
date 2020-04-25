@@ -1,4 +1,4 @@
-package GUI;
+package GUI.spinner;
 import java.awt.Component;
 import java.text.ParseException;
 

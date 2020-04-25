@@ -1,4 +1,4 @@
-package GUI;
+package GUI.text;
 /*
  * Copyright 2011-2013 by Manuel Merino Monge <manmermon@dte.us.es>
  *  

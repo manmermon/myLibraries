@@ -1,7 +1,7 @@
 /**
  * 
  */
-package GUI;
+package GUI.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

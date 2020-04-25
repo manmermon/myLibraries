@@ -1,4 +1,4 @@
-package GUI;
+package GUI.table;
 
 import java.awt.Component;
 import java.net.Inet4Address;
@@ -6,6 +6,8 @@ import java.net.Inet4Address;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import general.IPAddressValidator;
 
 public class IPAddressCellEditor extends DefaultCellEditor
 {

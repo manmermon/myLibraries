@@ -1,7 +1,7 @@
 /**
  * @(#)MenuScroller.java	1.5.0 04/02/12
  */
-package GUI;
+package GUI.menu;
 
 import java.awt.Color;
 import java.awt.Component;

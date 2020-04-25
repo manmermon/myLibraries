@@ -21,7 +21,7 @@
  */
 
 
-package GUI;
+package GUI.progressbar;
 
 import java.awt.Color;
 import java.awt.Dimension;

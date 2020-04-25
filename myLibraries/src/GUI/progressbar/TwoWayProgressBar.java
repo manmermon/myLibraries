@@ -1,7 +1,7 @@
 /**
  * 
  */
-package GUI;
+package GUI.progressbar;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

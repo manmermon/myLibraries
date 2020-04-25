@@ -1,4 +1,4 @@
-package GUI;
+package GUI.buttom;
 /*
  * Copyright 2011-2013 by Manuel Merino Monge <manmermon@dte.us.es>
  *  
@@ -23,7 +23,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
-public class CircleBoton extends JButton
+public class CircleButtom extends JButton
 {
 	/**
 	 * 
@@ -31,10 +31,10 @@ public class CircleBoton extends JButton
 	private static final long serialVersionUID = 1L;
 	private Shape figura;
 	
-	public CircleBoton( )
+	public CircleButtom( )
 	{
 		super( );
-		//Igualamos las dimensiones para que el botón sea un círculo en vez de
+		//Igualamos las dimensiones para que el botï¿½n sea un cï¿½rculo en vez de
 	    // una elipse
 	    Dimension tamano = getPreferredSize();
 	    tamano.width = tamano.height = Math.max( tamano.width,tamano.height );
@@ -46,7 +46,7 @@ public class CircleBoton extends JButton
 	    setContentAreaFilled( false );		
 	}
 	
-	public CircleBoton( String text )
+	public CircleButtom( String text )
 	{
 		this( );
 		

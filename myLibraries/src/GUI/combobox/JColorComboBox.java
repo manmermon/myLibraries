@@ -1,4 +1,4 @@
-package GUI;
+package GUI.combobox;
 
 import java.awt.Color;
 import java.awt.Component;

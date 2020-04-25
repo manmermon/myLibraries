@@ -1,4 +1,4 @@
-package GUI;
+package GUI.action;
 /*
  * Copyright 2011-2018 by Manuel Merino Monge <manmermon@dte.us.es>
  *  
