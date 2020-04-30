@@ -491,23 +491,34 @@ public class basicPainter2D
 		int[] xs = { 0,    lado, lado / 2 };
 		int[] ys = { lado, lado, 0 };
 		
+		float lt = lado - thicknessBorder;
+		int[] xs2 = { (int)thicknessBorder/2, (int)lt,(int)( (thicknessBorder + lt) / 2 )};
+		int[] ys2 = { (int)lt, (int)lt, (int)thicknessBorder/2 };
+		
 		switch ( orientacion ) 
 		{
 			case( SOUTH ):
 			{
 				ys[ 0 ] = 0; ys[ 1 ] = 0; ys[ 2 ] = lado;
+				ys2[ 0 ] = (int)thicknessBorder/2; ys2[ 1 ] = (int)thicknessBorder/2; ys2[ 2 ] = (int)lt;
 				break;
 			}	
 			case( WEST ):
 			{
 				xs[ 0 ] = lado; xs[ 1 ] = lado; xs[ 2 ] = 0;
 				ys[ 0 ] = 0;    ys[ 1 ] = lado; ys[ 2 ] = lado / 2;
+				
+				xs2[ 0 ] = (int)lt; xs2[ 1 ] = (int)lt; xs2[ 2 ] = (int)thicknessBorder/2;
+				ys2[ 0 ] = (int)thicknessBorder/2; ys2[ 1 ] = (int)lt; ys2[ 2 ] = (int)( ( thicknessBorder + lt ) / 2 );
 				break;
 			}
 			case( EAST ):
 			{
 				xs[ 0 ] = 0; xs[ 1 ] = 0;    xs[ 2 ] = lado;
 				ys[ 0 ] = 0; ys[ 1 ] = lado; ys[ 2 ] = lado / 2;
+				
+				xs2[ 0 ] = (int)thicknessBorder/2; xs2[ 1 ] = (int)thicknessBorder/2; xs2[ 2 ] = (int)lt;
+				ys2[ 0 ] = (int)thicknessBorder/2;    ys2[ 1 ] = (int)lt; ys2[ 2 ] = (int)( ( thicknessBorder + lt ) / 2 );
 				break;
 			}
 			default:
@@ -523,14 +534,12 @@ public class basicPainter2D
 			img = fillPolygon( xs, ys, colorRelleno , img );
 		}
 		
-		Color cBorde = Color.BLACK;
-		
 		if( colorBorde != null )
-		{
-			cBorde = colorBorde;
+		{	
+			img = outlinePolygon( xs2, ys2, thicknessBorder, colorBorde, img );
 		}
 		
-		 return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );		
+		 return img;		
 	}
 	
 	public static Image circle( int x, int y, int radio, Color c, Image img )

@@ -38,6 +38,7 @@ public class ExpandablePanel extends JPanel
 	/**
 	 * 
 	 */
+	/*
 	public static void main(String[] args) 
 	{
 		EventQueue.invokeLater(new Runnable() 
@@ -79,6 +80,7 @@ public class ExpandablePanel extends JPanel
 			}
 		});
 	}
+	*/
 	
 	public static final int NORTH = -1;
 	public static final int SOUTH = -2;
@@ -106,7 +108,7 @@ public class ExpandablePanel extends JPanel
 	{
 		this.getExpandButton().setText( text );
 	}
-	
+		
 	private JPanel getExpandPanel()
 	{
 		if( this.expandPanel == null )

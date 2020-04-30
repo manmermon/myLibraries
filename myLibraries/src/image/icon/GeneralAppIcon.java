@@ -21,6 +21,50 @@ public class GeneralAppIcon
 	public static final int BIG_PLUS_SIZE_ICON = 64;
 	public static final int HUGE_SIZE_ICON = 128;
 
+	public static ImageIcon clear( int size, Color color )
+	{
+		ImageIcon icon = null;
+		
+		if( color != null && size > 0 )
+		{
+			Image img = basicPainter2D.createEmptyCanva( size, size, null );
+			
+			int[] xs = new int[] { 0, size / 2, size, size, size / 2, 0 };
+			int[] ys = new int[] { size / 2, 0, 0, size, size, size / 2 };
+			
+			basicPainter2D.fillPolygon( xs, ys, color, img );
+			
+			float[] hsb = Color.RGBtoHSB( color.getRed(), color.getGreen(), color.getBlue(), null );
+			
+			Color crossColor = Color.WHITE;
+			if( hsb[ 2 ] >= 0.75 )
+			{
+				crossColor = Color.BLACK;
+			}
+			
+			float thickness = size / 8;
+			if( thickness < 1 )
+			{
+				thickness = 1;
+			}
+			
+			int wCross = size / 2;
+			int hCross  = size / 2;
+			
+			basicPainter2D.line( (int)(wCross - thickness), ( img.getHeight( null ) - hCross ) / 2 
+								, (int)( size - thickness), ( img.getHeight( null ) + hCross ) / 2
+								, thickness, crossColor, img );
+			
+			basicPainter2D.line( (int)( size - thickness), ( img.getHeight( null ) - hCross ) / 2 
+								, (int)(wCross - thickness), ( img.getHeight( null ) + hCross ) / 2
+								, thickness, crossColor, img );
+			
+			icon = new ImageIcon( img );
+		}	
+		
+		return icon;
+	}
+	
 	public static ImageIcon Add( int size, Color color )
 	{	
 		int thickness = size / 10;
@@ -724,20 +768,25 @@ public class GeneralAppIcon
 		{
 			thickness = 2;
 		}
-
-
-		Image img = basicPainter2D.createEmptyCanva( w, h, null );
-
 		if( borderColor == null )
 		{
 			borderColor = Color.BLACK;
 		}
 
-		Image imgAux = basicPainter2D.triangle( l, 1, borderColor, borderColor, basicPainter2D.EAST );
+		Image imgTr = basicPainter2D.triangle( l, 1, borderColor, borderColor, basicPainter2D.EAST );
+		Image imgArc = basicPainter2D.arc( 0, 0, w - (thickness * 3 ) / 2 
+											, h - 2 * l / 3 - thickness, 0
+											, -270, thickness, borderColor, fillColor
+											, null );
+		
 
-		basicPainter2D.composeImage( img, w / 2, 0, imgAux );
+		Image img = basicPainter2D.createEmptyCanva( imgArc.getWidth( null )
+													, imgTr.getHeight( null ) / 2 + imgArc.getHeight( null ) - thickness / 2
+													, null );
+		
 
-		basicPainter2D.arc( 0, 0, w - (thickness * 3 ) / 2 , h - 2 * l / 3 - thickness, 0, -270, thickness, borderColor, fillColor, img );
+		basicPainter2D.composeImage( img, 0, imgTr.getHeight( null ) / 2 - thickness / 2, imgArc );
+		basicPainter2D.composeImage( img, img.getWidth( null ) / 2, 0, imgTr );
 
 		return new ImageIcon( img );		
 	}
