@@ -35,7 +35,7 @@ public class Tuple<X, Y>
 	@Override
 	public boolean equals( Object obj ) 
 	{
-		boolean eq = ( obj instanceof Tuple );
+		boolean eq = ( obj != null ) && ( obj instanceof Tuple );
 		
 		if( eq )
 		{
