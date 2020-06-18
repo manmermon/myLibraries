@@ -1178,6 +1178,7 @@ public class basicPainter2D
 		{
 			Graphics g = baseImg.getGraphics();
 			g.drawImage( pasteImg, x, y, null );
+			g.dispose();
 		}
 				
 		return baseImg;

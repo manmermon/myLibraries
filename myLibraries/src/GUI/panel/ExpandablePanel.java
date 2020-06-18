@@ -140,7 +140,7 @@ public class ExpandablePanel extends JPanel
 			
 			Font f = this.expandBt.getFont();
 			FontMetrics fm = this.expandBt.getFontMetrics( f );
-			final Image collapseIco = basicPainter2D.text( "···", fm, Color.GRAY, Color.GRAY, null );
+			final Image collapseIco = basicPainter2D.text( "---", fm, Color.GRAY, Color.GRAY, null );
 			
 			this.expandBt.setFont( new Font( f.getName(), f.getStyle(), 10 ) );
 			

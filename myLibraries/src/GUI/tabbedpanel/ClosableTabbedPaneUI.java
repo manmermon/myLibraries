@@ -4,20 +4,17 @@
 package GUI.tabbedpanel;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
 import image.basicPainter2D;
-import image.icon.GeneralAppIcon;
 
 /**
  * @author manuel merino
