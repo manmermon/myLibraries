@@ -30,6 +30,7 @@ public class CircleButtom extends JButton
 	 */
 	private static final long serialVersionUID = 1L;
 	private Shape figura;
+	private int padding = 4;
 	
 	public CircleButtom( )
 	{
@@ -50,7 +51,12 @@ public class CircleButtom extends JButton
 	{
 		this( );
 		
-		super.setText( text );	
+		super.setText( text );
+		
+		FontMetrics fm = super.getFontMetrics( super.getFont() );
+		
+		super.setPreferredSize( new Dimension( fm.stringWidth( text ) + 2 * padding, fm.getHeight() ) );
+		super.setBackground( Color.RED );
 	}
 	
 	protected void paintComponent( Graphics g )

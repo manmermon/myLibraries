@@ -1,3 +1,9 @@
 
 myLibraries/.directory
 .directory
+/myLibraries/nbproject/private/
+myLibraries/build.xml
+myLibraries/nbproject/build-impl.xml
+myLibraries/nbproject/genfiles.properties
+myLibraries/nbproject/project.properties
+myLibraries/nbproject/project.xml

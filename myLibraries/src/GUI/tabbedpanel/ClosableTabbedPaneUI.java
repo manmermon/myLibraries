@@ -33,6 +33,7 @@ public class ClosableTabbedPaneUI extends MetalTabbedPaneUI
       
       super.tabPane.addMouseListener( handler );
       super.tabPane.addMouseMotionListener(handler );
+      
    }
   
    protected void paintTab( Graphics g, int tabPlacement,
