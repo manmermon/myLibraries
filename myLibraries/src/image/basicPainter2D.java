@@ -690,8 +690,14 @@ public class basicPainter2D
 	public static Image rectangle( int ancho, int alto, float thicknessBorder, Color colorBorde, Color colorRelleno )
 	{		
 		int t = (int)thicknessBorder;
+		
+		if( t < 2 )
+		{
+			t = 2;
+		}
+		
 		int[] xs = { t/2, ancho - t /2, ancho - t/2, t/2 };
-		int[] ys = { t/2,  t/2, alto - t / 2,  alto - t / 2 };
+		int[] ys = { t/2,  t/2, alto - t/2,  alto - t/2 };
 		
 		Image img = null;
 		
@@ -713,7 +719,7 @@ public class basicPainter2D
 			cBorde = colorBorde;
 		}
 		
-		 return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );		
+		return outlinePolygon( xs, ys, thicknessBorder, cBorde, img );		
 	}
 
 	public static Image roundRectangle( int x, int y, int width,

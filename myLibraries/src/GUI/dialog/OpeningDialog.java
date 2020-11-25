@@ -25,14 +25,23 @@ public class OpeningDialog extends JFrame
 		super.setUndecorated( true );
 		
 		super.setTitle( appName );
-		super.setIconImage( ico );
+		if( ico != null )
+		{
+			super.setIconImage( ico );
+		}
 		
 		JPanel content = new JPanel( new BorderLayout() );
 		content.setBackground( backgroundcolor );		
 		
 		super.setContentPane( content );
 		
-		JLabel lb = new JLabel( new ImageIcon( ico ) );
+		JLabel lb = new JLabel( );
+		
+		if( ico != null )
+		{
+			lb.setIcon( new ImageIcon( ico ) );
+		}
+		
 		lb.setText( msg );
 		
 		lb.setBorder( BorderFactory.createEmptyBorder() );
