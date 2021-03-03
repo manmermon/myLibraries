@@ -40,6 +40,8 @@ public class PausableTimer extends AbstractStoppableThread
 		super();
 		this.action = this.setAction( act ) ;
 		this.timer = new Timer( delay, this.action );
+		
+		super.setName( this.getClass().getName() );
 	}
 	
 	private ActionListener setAction( final ActionListener act )
@@ -86,6 +88,7 @@ public class PausableTimer extends AbstractStoppableThread
 		synchronized ( this )
 		{
 			this.startTime = System.nanoTime();
+			
 			this.timer.start();
 			
 			this.wait();
