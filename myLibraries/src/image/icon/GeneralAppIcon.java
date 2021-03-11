@@ -364,7 +364,7 @@ public class GeneralAppIcon
 				thick = 1;
 			}
 
-			//Image img = imagenPoligono2D.crearLienzoVacio( size, size, null );
+			//Image img = basicPainter2D.createEmptyCanva( size, size, null );
 
 			Image img = basicPainter2D.rectangle( size-thick/2, size-thick/2, thick, color, null );
 
@@ -585,11 +585,11 @@ public class GeneralAppIcon
 		
 		int numLines = 2;		
 		
-		//Image circ = imagenPoligono2D.circle( 0, 0, r, color, null );
+		//Image circ = basicPainter2D.circle( 0, 0, r, color, null );
 		Image circ = basicPainter2D.dot( 0, 0, r, color, true, null );
 		
 		Color fill = new Color( ~color.getRGB() );
-		//Image circ2 = imagenPoligono2D.circle( 0, 0, r / 2, fill, null );
+		//Image circ2 = basicPainter2D.circle( 0, 0, r / 2, fill, null );
 		Image circ2 = basicPainter2D.dot( 0, 0, ( 2 * r ) / 3, fill, true, null );
 		basicPainter2D.composeImage( circ, (int)Math.round( ( circ.getWidth( null ) - circ2.getWidth( null ) ) / 2.0 )
 												, (int)Math.round( ( circ.getHeight( null ) - circ2.getHeight( null ) ) / 2.0 )												
@@ -722,7 +722,7 @@ public class GeneralAppIcon
 
 		Image img = basicPainter2D.createEmptyCanva( w, h, null );
 
-		//Image imgAux = imagenPoligono2D.rectangle( w / 2, h / 5, thickness, borderColor, fillColor );
+		//Image imgAux = basicPainter2D.rectangle( w / 2, h / 5, thickness, borderColor, fillColor );
 		int x[] = { thickness, 3 * w / 7, 3 * w / 7, w - thickness, w - thickness, thickness };
 		int y[] = { thickness, thickness, h / 5, h / 5, 2 * h / 5, 2 * h / 5 };
 
@@ -735,7 +735,7 @@ public class GeneralAppIcon
 		{
 			basicPainter2D.outlinePolygon( x, y, thickness, borderColor, img );
 		}
-		//imagenPoligono2D.componerImagen( img, 0, 0, imgAux );
+		//basicPainter2D.composeImage( img, 0, 0, imgAux );
 
 		int xs[] = { thickness, w - thickness, w -thickness, thickness };
 		int ys[] = { 2 * h / 5, 2 * h / 5, h - thickness, h - thickness };
@@ -750,8 +750,8 @@ public class GeneralAppIcon
 			basicPainter2D.outlinePolygon( xs, ys, thickness, borderColor, img );
 		}
 
-		//Image imgAux = imagenPoligono2D.rectangle( w - thickness, 3 * h / 5, thickness, borderColor, fillColor );
-		//imagenPoligono2D.componerImagen( img, 0, 2 * h / 5, imgAux );
+		//Image imgAux = basicPainter2D.rectangle( w - thickness, 3 * h / 5, thickness, borderColor, fillColor );
+		//basicPainter2D.composeImage( img, 0, 2 * h / 5, imgAux );
 
 		return new ImageIcon( img );
 	}
@@ -837,7 +837,7 @@ public class GeneralAppIcon
 
 		img = basicPainter2D.composeImage( img, side/6, side/6 , eye );
 		img = basicPainter2D.composeImage( img, side - side/3, side/6 , eye );
-		//img = imagenPoligono2D.componerImagen( img, ( 5 * side ) / 12, ( 5 * side) / 12, nose );
+		//img = basicPainter2D.composeImage( img, ( 5 * side ) / 12, ( 5 * side) / 12, nose );
 
 		img = basicPainter2D.composeImage( img, ( side - w ) / 2 , side - hg*2, mouth );
 
@@ -941,7 +941,7 @@ public class GeneralAppIcon
 
 		img = basicPainter2D.composeImage( img, side/6, side/6 , eye );
 		img = basicPainter2D.composeImage( img, side - side/3, side/6 , eye );
-		//img = imagenPoligono2D.componerImagen( img, ( 5 * side ) / 12, ( 5 * side) / 12, nose );
+		//img = basicPainter2D.composeImage( img, ( 5 * side ) / 12, ( 5 * side) / 12, nose );
 
 		img = basicPainter2D.composeImage( img, ( side - w ) / 2 , side - hg*2, mouth );
 
@@ -1151,4 +1151,53 @@ public class GeneralAppIcon
 		
 		return new ImageIcon( base );				
 	}
+	
+
+	public static ImageIcon Camera( int iconSize )
+	{
+		int thick = 1; 
+		int thick2 = iconSize / 64;
+		if( thick2 < 1 )
+		{
+			thick2 = 1;
+		}
+		
+		int arrowWidth = (int)( (iconSize / 8) * 1.); 
+	
+		Image icon = basicPainter2D.createEmptyCanva( iconSize, iconSize, null );
+				
+		
+		int cameraWidth = iconSize;
+		//cameraWidth = (cameraWidth * 2 ) / 3;
+		
+		int padding = cameraWidth / 10;		
+		cameraWidth -= padding;
+						
+		Color back = Color.WHITE;
+		Color border = Color.BLACK;
+		
+		Image cameraBody = basicPainter2D.rectangle( cameraWidth, cameraWidth, cameraWidth / 8, border, back );
+		
+		Image cameraLen = basicPainter2D.circumference( 0, 0, cameraWidth / 2, cameraWidth / 8, border, null );
+		
+		Image cameraFlash = basicPainter2D.circle( 0, 0, cameraWidth / 6, border, null );
+				
+		int h = cameraBody.getHeight( null );		
+		Image camera = basicPainter2D.createEmptyCanva( cameraBody.getWidth( null ), cameraBody.getWidth( null ), null );
+		basicPainter2D.composeImage( camera, 0, 0, cameraBody );
+		basicPainter2D.composeImage( camera, cameraBody.getWidth( null )  / 2 - cameraLen.getWidth( null ) / 2
+												, cameraBody.getHeight( null ) / 2 - cameraLen.getHeight( null ) / 2, cameraLen );
+		
+		basicPainter2D.composeImage( camera, cameraFlash.getWidth( null )
+										, (int)(cameraFlash.getHeight( null ) * 1 ), cameraFlash );
+		
+		int w = camera.getWidth( null );		
+		
+		basicPainter2D.composeImage( icon, icon.getWidth( null ) / 2 - w / 2
+												, icon.getHeight( null ) / 2 - h / 2, camera );
+		
+				
+		return new ImageIcon( icon );	
+	}
+
 }

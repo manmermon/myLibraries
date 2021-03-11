@@ -138,6 +138,45 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 	}
 	
 	/**
+	 * Associates the specified value with the specified key in this map. 
+	 * If the map previously contained a mapping for the key, 
+	 * the old value is replaced.
+	 * @param key - key with which the specified value is to be associated
+	 * @param value - value to be associated with the specified key
+	 * @param pos - index at which the specified element is to be inserted. 
+	 * 				If it is greater than the number of items stored, it 
+	 * 				will be inserted last. If it is negative, it will be 
+	 * 				inserted as the first element. 
+	 * @return  the previous value associated with key, or null if there 
+	 * 			was no mapping for key. (A null return can also indicate 
+	 * 			that the map previously associated null with key).
+	 * @throws ClassCastException - if the specified key cannot be compared 
+	 * 									with the keys currently in the map
+     * @throws NullPointerException - if the specified key is null and this 
+     *									map uses natural ordering, or its 
+     *									comparator does not permit null keys
+	 */
+	public List< Y > put( X key, Y value, int pos )
+	{
+		List< Y > VALS = this.createValuesList( key );
+		
+		if( pos < 0 )
+		{
+			VALS.add( 0, value );
+		}
+		else if( pos < VALS.size() )
+		{
+			VALS.add( pos, value );
+		}
+		else
+		{
+			VALS.add( value );
+		}
+		
+		return VALS;
+	}
+	
+	/**
 	 *  Create a value list for the key.
 	 * @param key  - key with which the specified value is to be associated
 	 * @return List of values for the key.

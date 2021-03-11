@@ -1,4 +1,4 @@
-package general;
+package GUI.layout;
 /*
  * @(#)VerticalFlowLayout.java	1.52 03/12/19
  *
@@ -241,7 +241,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
      * <code>VerticalFlowLayout.LEADING</code>,
      * or <code>VerticalFlowLayout.TRAILING</code>.
      * @return     the alignment value for this layout
-     * @see        java.awt.VerticalFlowLayout#setAlignment
+     * @see        java.GUI.layout.VerticalFlowLayout#setAlignment
      * @since      JDK1.1
      */
     public int getAlignment() {
@@ -290,7 +290,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
      * @return     the horizontal gap between components
      *             and between the components and the borders
      *             of the <code>Container</code>
-     * @see        java.awt.VerticalFlowLayout#setHgap
+     * @see        java.GUI.layout.VerticalFlowLayout#setHgap
      * @since      JDK1.1
      */
     public int getHgap() {
@@ -305,7 +305,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
      * @param hgap the horizontal gap between components
      *             and between the components and the borders
      *             of the <code>Container</code>
-     * @see        java.awt.VerticalFlowLayout#getHgap
+     * @see        java.GUI.layout.VerticalFlowLayout#getHgap
      * @since      JDK1.1
      */
     public void setHgap(int hgap) {
@@ -320,7 +320,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
      * @return     the vertical gap between components
      *             and between the components and the borders
      *             of the <code>Container</code>
-     * @see        java.awt.VerticalFlowLayout#setVgap
+     * @see        java.GUI.layout.VerticalFlowLayout#setVgap
      * @since      JDK1.1
      */
     public int getVgap() {
@@ -334,7 +334,7 @@ public class VerticalFlowLayout implements LayoutManager, java.io.Serializable {
      * @param vgap the vertical gap between components
      *             and between the components and the borders
      *             of the <code>Container</code>
-     * @see        java.awt.VerticalFlowLayout#getVgap
+     * @see        java.GUI.layout.VerticalFlowLayout#getVgap
      * @since      JDK1.1
      */
     public void setVgap(int vgap) {
