@@ -1,11 +1,11 @@
 /*
- * Work uses part of CLIS <https://github.com/manmermon/CLIS> by Manuel Merino Monge 
+ * Work based on CLIS by Manuel Merino Monge <https://github.com/manmermon/CLIS>
  * 
- * Copyright 2019 by Manuel Merino Monge <manmermon@dte.us.es>
+ * Copyright 2018 by Manuel Merino Monge <manmermon@dte.us.es>
  *  
- *   This file is part of IRO.
+ *   This file is part of LSLRec.  https://github.com/manmermon/LSLRecorder
  *
- *   IRO is free software: you can redistribute it and/or modify
+ *   LSLRec is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
@@ -18,17 +18,29 @@
  *   You should have received a copy of the GNU General Public License
  *   along with LSLRec.  If not, see <http://www.gnu.org/licenses/>.
  *   
- *   Project's URL: https://github.com/manmermon/IRO
  */
 
 package thread.stoppableThread;
 
-public abstract class AbstractStoppableThread extends Thread implements IStoppableThread
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.event.EventListenerList;
+
+import thread.stoppableThread.events.IStoppableThreadEventListener;
+import thread.stoppableThread.events.StoppableThreadEvent;
+
+//import javax.swing.event.EventListenerList;
+
+public abstract class AbstractStoppableThread extends Thread implements IStoppableThread//, IStoppableThreadEventControl
 {
     protected volatile boolean stopThread = false;
-    protected volatile boolean stopWhenTaskDone = false;
-    protected boolean d ;
+    protected volatile AtomicBoolean stopWhenTaskDone = new AtomicBoolean( false );
+    //protected boolean d ;
+    
+    private EventListenerList listenerList = new EventListenerList();
    
+    private ThreadStopException stopExc = null;
+    
     /*
      * (non-Javadoc)
      * @see StoppableThread.IStoppableThread#startThread()
@@ -80,15 +92,19 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
         {
 			e1.printStackTrace();
 		}
-             	        
+        
+        this.fireStartedEvent();
+        
         while ( !this.stopThread ) 
         {
+        	//this.fireStartLoopInteractionEvent();
+        	
         	 try
              { 
 	            this.runInLoop();
 	            this.targetDone();
              }
-        	 catch( Exception e )
+        	 catch( Exception | Error e )
              {
         		 this.runExceptionManager( e );             	
              }
@@ -96,7 +112,13 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
              {
             	 this.finallyManager();
              }
+        	 
+        	 //this.fireEndLoopInteractionEvent();
         }
+        
+        this.throwThreadStopException();
+        
+        this.fireFinishedLoopEvent();
         
     	try 
     	{
@@ -106,6 +128,20 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
     	{
 			e.printStackTrace();
 		}
+    	
+    	this.fireTerminedEvent();
+    }
+    
+    /**
+     * Call runExceptionManager( e ) if thread was stopped by an ERROR_STOP.
+     * 
+     */
+    protected void throwThreadStopException()
+    {
+    	if( this.stopExc != null )
+    	{
+    		this.runExceptionManager( this.stopExc );
+    	}
     }
     
     /**
@@ -113,7 +149,7 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
      * 
      * @param e	-> Exception
      */
-    protected void runExceptionManager( Exception e )
+    protected void runExceptionManager( Throwable e )
     {
     	e.printStackTrace();
     }
@@ -133,30 +169,38 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
     {
     	try 
     	{
-			this.preStopThread(friendliness);
+			this.preStopThread( friendliness );
 		}
     	catch (Exception e) 
     	{
 			e.printStackTrace();
 		}
     	
-    	if( friendliness < 0 )
+    	if( friendliness == STOP_WITH_TASKDONE )
     	{
-    		this.stopWhenTaskDone = true;
+    		synchronized ( this.stopWhenTaskDone )
+    		{
+    			this.stopWhenTaskDone.set( true );
+			}    		
     	}
-    	else
+    	else 
     	{
     		this.stopThread = true;
     	}
     	
-    	if( friendliness > 0 )
+    	if( friendliness > 0 || friendliness < -1 )
     	{
     		super.interrupt();
+    	}
+    	
+    	if( friendliness < -1 )
+    	{
+    		this.stopExc = new ThreadStopException();
     	}
         
     	try 
     	{
-			this.postStopThread(friendliness);
+			this.postStopThread( friendliness );
 		}
     	catch (Exception e) 
     	{
@@ -171,12 +215,15 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
      */
     protected void targetDone() throws Exception
     {
-    	if( this.stopWhenTaskDone )
+    	synchronized ( this.stopWhenTaskDone ) 
     	{
-    		this.stopThread = true;
-    		
-    		super.interrupt();
-    	}
+    		if( this.stopWhenTaskDone.get() )
+        	{
+        		this.stopThread = true;
+        		
+        		super.interrupt();
+        	}
+		}    	
     }
     
     /**
@@ -190,7 +237,8 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
      * Action before to stop execution.  
      * 
      * @param friendliness: 
-     * - if friendliness < 0: stop execution when task is done.
+     * - if friendliness < -1: interrupt immediately task and then execution is stopped. An exception is thrown.
+     * - if friendliness = -1: stop execution when task is done.
      * - if friendliness = 0: stop execution before the next loop interaction.
      * - if friendliness > 0: interrupt immediately task and then execution is stopped.
      */
@@ -199,7 +247,8 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
     /**
      * Action after to stop execution.  
      * @param friendliness:
-     * - if friendliness < 0: stop execution when task is done.
+     * - if friendliness < -1: interrupt immediately task and then execution is stopped. An exception is thrown.
+     * - if friendliness = -1: stop execution when task is done.
      * - if friendliness = 0: stop execution before the next loop interaction.
      * - if friendliness > 0: interrupt immediately task and then execution is stopped.
      */
@@ -218,4 +267,76 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
     protected void cleanUp() throws Exception
     {    	
     }
+    
+    public void addStoppableThreadEventListener( IStoppableThreadEventListener listener )
+    {
+    	this.listenerList.add( IStoppableThreadEventListener.class, listener );
+    }
+	
+	public void removeStoppableThreadEventControl( IStoppableThreadEventListener listener )
+	{
+		this.listenerList.remove( IStoppableThreadEventListener.class, listener );
+	}
+	
+	private void fireStartedEvent()
+	{
+		StoppableThreadEvent event = new StoppableThreadEvent( this, super.getId(), Thread.State.RUNNABLE );
+
+		IStoppableThreadEventListener[] listeners = this.listenerList.getListeners( IStoppableThreadEventListener.class );
+
+		for (int i = 0; i < listeners.length; i++ ) 
+		{
+			listeners[ i ].Started( event );
+		}
+	}
+	
+	/*
+	private void fireStartLoopInteractionEvent()
+	{
+		StoppableThreadEvent event = new StoppableThreadEvent( this, super.getId(), Thread.State.RUNNABLE );
+
+		IStoppableThreadEventListener[] listeners = this.listenerList.getListeners( IStoppableThreadEventListener.class );
+
+		for (int i = 0; i < listeners.length; i++ ) 
+		{
+			listeners[ i ].LoopStartInteraction( event );
+		}
+	}
+	
+	private void fireEndLoopInteractionEvent()
+	{
+		StoppableThreadEvent event = new StoppableThreadEvent( this, super.getId(), Thread.State.RUNNABLE );
+
+		IStoppableThreadEventListener[] listeners = this.listenerList.getListeners( IStoppableThreadEventListener.class );
+
+		for (int i = 0; i < listeners.length; i++ ) 
+		{
+			listeners[ i ].LoopEndInteraction(event );
+		}
+	}
+	*/
+	
+	private void fireFinishedLoopEvent()
+	{
+		StoppableThreadEvent event = new StoppableThreadEvent( this, super.getId(), Thread.State.RUNNABLE );
+
+		IStoppableThreadEventListener[] listeners = this.listenerList.getListeners( IStoppableThreadEventListener.class );
+
+		for (int i = 0; i < listeners.length; i++ ) 
+		{
+			listeners[ i ].Termined( event );
+		}
+	}
+	
+	private void fireTerminedEvent()
+	{
+		StoppableThreadEvent event = new StoppableThreadEvent( this, super.getId(), Thread.State.TERMINATED );
+
+		IStoppableThreadEventListener[] listeners = this.listenerList.getListeners( IStoppableThreadEventListener.class );
+
+		for (int i = 0; i < listeners.length; i++ ) 
+		{
+			listeners[ i ].Termined( event );
+		}
+	}
 }
