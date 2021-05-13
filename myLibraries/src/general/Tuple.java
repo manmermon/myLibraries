@@ -11,23 +11,19 @@ public class Tuple<X, Y>
 		this.t2 = y;
 	}
 	
-	public static boolean isCorrectTypes( Object obj, Class xClass, Class yClass )
+	public static boolean isCorrectTypes( Tuple t, Class xClass, Class yClass )
 	{
 		boolean correct = false;
 		
-		if( obj != null && xClass != null && yClass != null )
+		if( t != null && xClass != null && yClass != null )
 		{
-			if( obj instanceof Tuple )
-			{
-				Tuple t = (Tuple)obj;
-				correct = ( xClass.isInstance( t.t1 ) ) && ( yClass.isInstance( t.t2 ) );
-			}
+			correct = ( xClass.isInstance( t.t1 ) ) && ( yClass.isInstance( t.t2 ) );
 		}
 		
 		return correct;
 	}
 	
-	public static boolean isCorrectTypes( Object obj, Class cl )
+	public static boolean isCorrectTypes( Tuple obj, Class cl )
 	{	
 		return isCorrectTypes( obj, cl, cl);
 	}
