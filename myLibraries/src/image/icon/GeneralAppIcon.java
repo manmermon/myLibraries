@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -1095,6 +1096,22 @@ public class GeneralAppIcon
 		basicPainter2D.arc( width  / 2, height / 2 - ( ( 4 * h ) / 5 ) /2 - t, ( 3 * w ) / 2, ( 4 * h ) / 5, -90, 180, t, fillColor, null, base );
 		
 		return new ImageIcon( base );
+	}
+	
+	public static ImageIcon Mute( int width, int height, Color fillColor, Color bgColor )
+	{
+		BufferedImage img = (BufferedImage)Sound( width, height, fillColor, bgColor).getImage();
+		
+		int thick = (int)( Math.max( width, height) / 8);
+		if( thick < 1 )
+		{
+			thick = 1;
+		}
+		
+		basicPainter2D.line( 0, img.getHeight(), img.getWidth(), 0
+							, thick, fillColor, img );
+		
+		return new ImageIcon( img );
 	}
 	
 	public static ImageIcon InterleavedIcon( int width, int height, Color border, Color fill, Color background )
