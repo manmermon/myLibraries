@@ -13,6 +13,8 @@ import java.util.Set;
 
 /**
  * @author manuel
+ * @param <X>
+ * @param <Y>
  *
  */
 public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Cloneable 
@@ -36,7 +38,7 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 
 	/**
 	 * Copies all of the mappings from the specified ArrayTreeMap to this ArrayTreeMap.
-	 * @param arrayTree - ArrayTreeMap to be stored in this map
+	 * @param arrayMap - ArrayTreeMap to be stored in this map
 	 * @throws ClassCastException - if the specified key cannot be compared with the keys currently in the map
 	 * @throws NullPointerException - if the specified key is null and this map uses natural ordering, 
 	 * 								or its comparator does not permit null keys
@@ -66,14 +68,14 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 	 */
 	public boolean removeValue( X key, Y val )
 	{
-		List< Y > VALS = this.map.get( key );
-		
-		if( VALS != null )
-		{
-			VALS.remove( val );
-		}
-		
-		return VALS.contains( val );
+            List< Y > VALS = this.map.get( key );
+
+            if( VALS != null )
+            {
+                    VALS.remove( val );
+            }
+
+            return VALS.contains( val );
 	}
 		
 	/*
@@ -103,7 +105,7 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 	 * (non-Javadoc)
 	 * @see java.util.AbstractMap#put(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	@Override        
 	public List< Y > put( X key, List< Y > values ) 
 	{
 		List< Y > VALS = this.createValuesList( key );
@@ -112,7 +114,7 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 		
 		return VALS;
 	}
-
+      
 	/**
 	 * Associates the specified value with the specified key in this map. 
 	 * If the map previously contained a mapping for the key, 
@@ -131,12 +133,12 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
 	public List< Y > put( X key, Y value )
 	{
 		List< Y > VALS = this.createValuesList( key );
-		
+
 		VALS.add( value );		
-		
+
 		return VALS;
 	}
-	
+
 	/**
 	 * Associates the specified value with the specified key in this map. 
 	 * If the map previously contained a mapping for the key, 

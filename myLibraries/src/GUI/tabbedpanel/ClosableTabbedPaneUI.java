@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
-import image.basicPainter2D;
+import image.BasicPainter2D;
 
 /**
  * @author manuel merino
@@ -43,7 +43,7 @@ public class ClosableTabbedPaneUI extends MetalTabbedPaneUI
    {
 	  FontMetrics fm = g.getFontMetrics(g.getFont());
       
-      Image img = basicPainter2D.text( 0, 0, "X", fm, Color.RED, Color.RED, null );
+      Image img = BasicPainter2D.text( 0, 0, "X", fm, Color.RED, Color.RED, null );
             
       super.paintTab( g, tabPlacement, rects, tabIndex, iconRect, textRect);
       

@@ -27,7 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
-import image.basicPainter2D;
+import image.BasicPainter2D;
 
 /**
  * @author manuel
@@ -140,7 +140,7 @@ public class ExpandablePanel extends JPanel
 			
 			Font f = this.expandBt.getFont();
 			FontMetrics fm = this.expandBt.getFontMetrics( f );
-			final Image collapseIco = basicPainter2D.text( "---", fm, Color.GRAY, Color.GRAY, null );
+			final Image collapseIco = BasicPainter2D.text( "---", fm, Color.GRAY, Color.GRAY, null );
 			
 			this.expandBt.setFont( new Font( f.getName(), f.getStyle(), 10 ) );
 			
@@ -187,7 +187,7 @@ public class ExpandablePanel extends JPanel
 			ctr.setSize( new Dimension( s.height, s.width ) );		
 			
 			ImageIcon ico = (ImageIcon)this.getExpandButton().getIcon();
-			this.getExpandButton().setIcon( new ImageIcon( basicPainter2D.rotate( (BufferedImage)ico.getImage(), 90 ) ) );
+			this.getExpandButton().setIcon( new ImageIcon( BasicPainter2D.rotate( (BufferedImage)ico.getImage(), 90 ) ) );
 		}
 				
 		switch ( orentation )

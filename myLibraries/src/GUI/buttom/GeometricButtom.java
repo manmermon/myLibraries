@@ -16,7 +16,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JButton;
 
-import image.basicPainter2D;
+import image.BasicPainter2D;
 
 public class GeometricButtom extends JButton
 {
