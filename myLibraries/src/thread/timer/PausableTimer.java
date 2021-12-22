@@ -32,7 +32,7 @@ import thread.stoppableThread.AbstractStoppableThread;
 public class PausableTimer extends AbstractStoppableThread
 {
 	private Timer timer;
-	private long startTime;
+	private long startTime = -1;
 	private ActionListener action;
 	
 	public PausableTimer( int delay, ActionListener act ) 
@@ -118,6 +118,18 @@ public class PausableTimer extends AbstractStoppableThread
 		}		
 	}	
 	
+	public int getRemainingTime()
+	{
+		int restTime = this.timer.getInitialDelay();
+		if( this.startTime > 0 )
+		{
+			restTime = restTime - (int)( ( System.nanoTime() - this.startTime ) / 1e6D );
+			restTime = ( restTime <= 0 ) ? 0 : restTime;
+		}
+		
+		return restTime;		 
+	}
+	
 	public void pauseTimer() 
 	{
 		synchronized ( this ) 
@@ -126,7 +138,8 @@ public class PausableTimer extends AbstractStoppableThread
 					&& this.timer.isRunning() )
 			{
 				this.timer.stop();
-				int restTime = this.timer.getInitialDelay() - (int)( ( System.nanoTime() - this.startTime ) / 1e6D );
+				int restTime = this.getRemainingTime();//this.timer.getInitialDelay() - (int)( ( System.nanoTime() - this.startTime ) / 1e6D );
+				this.startTime = -1;
 				this.timer = new Timer( restTime, this.action );
 			}
 		}
