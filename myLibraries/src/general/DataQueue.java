@@ -117,6 +117,10 @@ public class DataQueue< T >
 		return val;
 	}
 	
+	/**
+	 * 
+	 * @return get the all elements in the queue. The elements are not remove.
+	 */
 	public T[] getAll()
 	{
 		Object[] D = new Object[ this.len ];
@@ -135,6 +139,10 @@ public class DataQueue< T >
 		return (T[])D;
 	}
 	
+	/**
+	 * 
+	 * @return get and remove all elements in the queue.
+	 */
 	public T[] pullAll()
 	{
 		Object[] D = new Object[ this.len ];
