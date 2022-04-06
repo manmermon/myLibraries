@@ -77,6 +77,20 @@ public class BasicPainter2D
 		
 		return copyOfImage;
 	}
+	
+	public static BufferedImage image2Grayscale( Image img )
+	{
+		BufferedImage grayImage = null;
+		
+		if( img != null )
+		{
+			grayImage = new BufferedImage( img.getWidth( null ), img.getHeight( null ), BufferedImage.TYPE_BYTE_GRAY );
+			grayImage.getGraphics().drawImage( img, 0, 0, null );
+			grayImage.getGraphics().dispose();
+		}
+		
+		return grayImage;
+	}
 
 	/*
 	public static BufferedImage convertToBufferedImage( Image image )
@@ -841,7 +855,8 @@ public class BasicPainter2D
 		}
 		else if( fm != null )
 		{ 		
-			int wd = fm.stringWidth( texto ), hg = fm.getAscent() - fm.getLeading() * 2;
+			int wd = fm.stringWidth( texto );
+			int hg = fm.getHeight();// fm.getAscent() - fm.getLeading() * 2;
 			imagen = new BufferedImage( wd, hg, BufferedImage.TYPE_INT_ARGB );			
 			g = (Graphics2D)imagen.getGraphics();
 		}

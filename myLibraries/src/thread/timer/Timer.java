@@ -6,6 +6,7 @@ package thread.timer;
 import javax.swing.event.EventListenerList;
 
 import thread.stoppableThread.AbstractStoppableThread;
+import thread.stoppableThread.IStoppableThread;
 import thread.timer.event.ActionTimerEvent;
 import thread.timer.event.ActionTimerEvent.Type;
 import thread.timer.event.IActionTimerEventListener;
@@ -89,7 +90,8 @@ public class Timer extends AbstractStoppableThread
 		
 		if( !this.loop )
 		{
-			super.stopThread = true;
+			//super.stopThread = true;
+			this.pause = true;
 		}
 	}
 	
@@ -101,7 +103,7 @@ public class Timer extends AbstractStoppableThread
 			super.runExceptionManager( e );
 		}
 	}
-	
+			
 	@Override
 	protected void finallyManager() 
 	{
@@ -128,17 +130,14 @@ public class Timer extends AbstractStoppableThread
 	{
 		synchronized( this.lock )
 		{
-			System.out.println("ActionTimer.restartTimer() 1 ");
 			this.pause = false;
 			
-			System.out.println("ActionTimer.restartTimer() 2 ");
 			if( this.action != null )
 			{
 				this.action.interrupt();
 			}
 			super.interrupt();
 			
-			System.out.println("ActionTimer.restartTimer() 3 ");
 			this.fireActionTimerEvent( Type.RESTART );
 		}		
 	}
@@ -155,10 +154,23 @@ public class Timer extends AbstractStoppableThread
 		}
 	}
 	
+	public void destroyTimer()
+	{
+		synchronized( this.lock )
+		{
+			super.stopThread( IStoppableThread.FORCE_STOP );
+		}
+	}
+	
 	@Override
 	protected void cleanUp() throws Exception 
 	{	
 		super.cleanUp();
+		
+		if( this.action != null )
+		{
+			this.action.stopThread( IStoppableThread.FORCE_STOP );
+		}
 		
 		this.fireActionTimerEvent( Type.DESTROY );
 	}

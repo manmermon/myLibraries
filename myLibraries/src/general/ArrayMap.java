@@ -75,7 +75,9 @@ public class ArrayMap< X, Y > extends AbstractMap< X, List< Y > > implements Clo
                     VALS.remove( val );
             }
 
-            return VALS.contains( val );
+            boolean cont = (VALS != null ) && ( val != null ) && VALS.contains( val );  
+            
+            return cont;
 	}
 		
 	/*

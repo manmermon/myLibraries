@@ -90,7 +90,7 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
 		}
         catch (Exception e1) 
         {
-			e1.printStackTrace();
+        	this.runExceptionManager( e1 );
 		}
         
         this.fireStartedEvent();
@@ -126,7 +126,7 @@ public abstract class AbstractStoppableThread extends Thread implements IStoppab
 		}
     	catch (Exception e) 
     	{
-			e.printStackTrace();
+    		this.runExceptionManager( e );
 		}
     	
     	this.fireTerminedEvent();
