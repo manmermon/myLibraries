@@ -649,6 +649,7 @@ public class ConvertTo
 
 	public static byte[] doubleArray2byteArray(double[] d)
 	{
+		/*
 		byte[] out = null;
 
 		if (d != null)
@@ -663,8 +664,34 @@ public class ConvertTo
 		}
 
 		return out;
+		*/
+		
+		return doubleArray2byteArray( d, true );
 	}
 
+	
+	public static byte[] doubleArray2byteArray(double[] d, boolean isBigEndian )
+	{
+		byte[] out = null;
+		
+		ByteOrder byteOrder = isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+
+		if (d != null)
+		{
+			int bytes = Double.BYTES;
+
+			out = new byte[d.length * bytes];
+
+			ByteBuffer data = ByteBuffer.wrap( out ).order( byteOrder );
+			DoubleBuffer dBuf = data.asDoubleBuffer();
+			dBuf.put(d);
+		}
+
+		return out;
+	}
+	
+	
+	
 	public static Double ByteArray2Double(byte[] bytes)
 	{
 		Double val = null;
@@ -737,18 +764,26 @@ public class ConvertTo
 		return out;
 	}
 
-	public static double[] ByteArray2DoubleArray(byte[] bytes)
+	public static double[] ByteArray2DoubleArray(byte[] bytes, boolean isBigEndian)
 	{
 		double[] out = null;
+		
+		ByteOrder byteOrder = isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
 
 		if (bytes != null && (bytes.length % Double.BYTES) == 0)
 		{
-			DoubleBuffer buf = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).asDoubleBuffer();
+			DoubleBuffer buf = ByteBuffer.wrap(bytes).order( byteOrder ).asDoubleBuffer();
 
 			out = new double[buf.remaining()];
 			buf.get(out);
 		}
 
+		return out;
+	}
+	
+	public static double[] ByteArray2DoubleArray(byte[] bytes)
+	{
+		double[] out = ByteArray2DoubleArray( bytes, true );
 		return out;
 	}
 
