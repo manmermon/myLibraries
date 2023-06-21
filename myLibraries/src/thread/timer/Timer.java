@@ -78,7 +78,7 @@ public class Timer extends AbstractStoppableThread
 		}
 		
 		if( this.action != null )
-		{
+		{			
 			this.action.execute();
 		}
 	}

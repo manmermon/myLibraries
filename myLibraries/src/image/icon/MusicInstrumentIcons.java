@@ -106,7 +106,9 @@ public class MusicInstrumentIcons
 	
 	public static Image getInstrument( Set< String > idInstruments, int size, Color c )
 	{
-		Image img =  BasicPainter2D.circle( 0, 0, size, c, null );
+		//Image img =  BasicPainter2D.circle( 0, 0, size, c, null );
+		
+		Image img =  MusicInstrumentIcons.Quaver( size, size, c, null );
 		
 		if( idInstruments != null && !idInstruments.isEmpty() )
 		{

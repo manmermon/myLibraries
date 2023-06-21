@@ -50,4 +50,13 @@ public class ActionTimerThread extends AbstractStoppableThread
 		}
 	}
 	
+	@Override
+	protected void runExceptionManager(Throwable e) 
+	{
+		if( !( e instanceof InterruptedException ) )
+		{
+			super.runExceptionManager( e );
+		}
+	}
+	
 }
